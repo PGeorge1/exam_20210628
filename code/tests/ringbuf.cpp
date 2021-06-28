@@ -122,6 +122,73 @@ TEST(Ringbuf, pop1)
     EXPECT_EQ(3, buf.getFree());
 }
 
+TEST(Ringbuf, copyConstr1)
+{
+    IntRingBuffer buf(3);
+
+    buf.push(10);
+    buf.push(20);
+    buf.push(30);
+    buf.pop();
+    buf.push(40);
+    EXPECT_EQ(3, buf.getSize());
+    EXPECT_EQ(3, buf.getCount());
+    EXPECT_EQ(0, buf.getFree());
+    EXPECT_FALSE(buf.isEmpty());
+    EXPECT_TRUE(buf.isFull());
+    EXPECT_EQ(40, buf.back());
+    EXPECT_EQ(20, buf.front());
+
+    // making a copy
+    IntRingBuffer buf2(buf);
+    EXPECT_EQ(3, buf2.getSize());
+    EXPECT_EQ(3, buf2.getCount());
+    EXPECT_EQ(0, buf2.getFree());
+    EXPECT_FALSE(buf2.isEmpty());
+    EXPECT_TRUE(buf2.isFull());
+    EXPECT_EQ(40, buf2.back());
+    EXPECT_EQ(20, buf2.front());
+}
+
+TEST(Ringbuf, copyAssignment1)
+{
+    IntRingBuffer buf(3);
+
+    buf.push(10);
+    buf.push(20);
+    buf.push(30);
+    buf.pop();
+    buf.push(40);
+    EXPECT_EQ(3, buf.getSize());
+    EXPECT_EQ(3, buf.getCount());
+    EXPECT_EQ(0, buf.getFree());
+    EXPECT_FALSE(buf.isEmpty());
+    EXPECT_TRUE(buf.isFull());
+    EXPECT_EQ(40, buf.back());
+    EXPECT_EQ(20, buf.front());
+
+    IntRingBuffer buf2(2);
+    buf2.push(100);
+    buf2.pop();
+    buf2.push(200);
+    EXPECT_EQ(2, buf2.getSize());
+    EXPECT_EQ(1, buf2.getCount());
+    EXPECT_EQ(1, buf2.getFree());
+    EXPECT_FALSE(buf2.isEmpty());
+    EXPECT_FALSE(buf2.isFull());
+    EXPECT_EQ(200, buf2.back());
+    EXPECT_EQ(200, buf2.front());
+
+//    // reassignment
+    buf2 = buf;
+    EXPECT_EQ(3, buf2.getSize());
+    EXPECT_EQ(3, buf2.getCount());
+    EXPECT_EQ(0, buf2.getFree());
+    EXPECT_FALSE(buf2.isEmpty());
+    EXPECT_TRUE(buf2.isFull());
+    EXPECT_EQ(40, buf2.back());
+    EXPECT_EQ(20, buf2.front());
+}
 
 
 //
